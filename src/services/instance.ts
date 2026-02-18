@@ -1,4 +1,5 @@
-import axios, {type AxiosRequestConfig, type InternalAxiosRequestConfig} from "axios";
+import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from "axios";
+import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_PREFIX;
 
@@ -20,6 +21,7 @@ instance.interceptors.request.use(
         return config;
     },
     (error: unknown) => {
+        toast.error("Request failed. Please try again.");
         return Promise.reject(error);
     }
 );
@@ -44,11 +46,34 @@ interface RetryableRequestConfig extends AxiosRequestConfig {
     _retry?: boolean;
 }
 
+// Extract a readable message from error responses
+const getErrorMessage = (err: {
+    response?: { status: number; data?: { detail?: string; message?: string } };
+}): string => {
+    const detail = err.response?.data?.detail;
+    const message = err.response?.data?.message;
+
+    if (typeof detail === "string") return detail;
+    if (typeof message === "string") return message;
+
+    switch (err.response?.status) {
+        case 400: return "Bad request. Please check your input.";
+        case 403: return "You don't have permission to perform this action.";
+        case 404: return "The requested resource was not found.";
+        case 409: return "A conflict occurred. Please try again.";
+        case 422: return "Validation failed. Please check your input.";
+        case 429: return "Too many requests. Please slow down.";
+        case 500: return "Server error. Please try again later.";
+        case 503: return "Service unavailable. Please try again later.";
+        default:  return "An unexpected error occurred.";
+    }
+};
+
 // Response interceptor - Handle token refresh
 instance.interceptors.response.use(
     (res) => res,
     async (err: {
-        response?: { status: number };
+        response?: { status: number; data?: { detail?: string; message?: string } };
         config: InternalAxiosRequestConfig & RetryableRequestConfig;
     }) => {
         const originalRequest = err.config;
@@ -66,7 +91,7 @@ instance.interceptors.response.use(
             // If already refreshing, queue this request
             if (isRefreshing) {
                 return new Promise<string>(function (resolve, reject) {
-                    failedQueue.push({resolve, reject});
+                    failedQueue.push({ resolve, reject });
                 })
                     .then((token) => {
                         originalRequest.headers!.Authorization = "Bearer " + token;
@@ -82,6 +107,7 @@ instance.interceptors.response.use(
                 isRefreshing = false;
                 localStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
+                toast.error("Session expired. Please log in again.");
                 window.location.href = "/login";
                 return Promise.reject(err);
             }
@@ -89,25 +115,20 @@ instance.interceptors.response.use(
             try {
                 const resp = await axios.post<{ access: string; refresh?: string }>(
                     `${API_BASE_URL}/auth/refresh/`,
-                    {refresh}
+                    { refresh }
                 );
 
                 const newAccess = resp.data.access;
 
-                // Update tokens
                 localStorage.setItem("access_token", newAccess);
                 if (resp.data.refresh) {
                     localStorage.setItem("refresh_token", resp.data.refresh);
                 }
 
-                // Update default header
                 instance.defaults.headers.common.Authorization = "Bearer " + newAccess;
-
-                // Process queued requests
                 processQueue(null, newAccess);
                 isRefreshing = false;
 
-                // Retry original request with new token
                 originalRequest.headers!.Authorization = "Bearer " + newAccess;
                 return instance(originalRequest);
 
@@ -115,13 +136,21 @@ instance.interceptors.response.use(
                 processQueue(refreshError, null);
                 isRefreshing = false;
 
-                // Clear tokens and redirect to login
                 localStorage.removeItem("access_token");
                 localStorage.removeItem("refresh_token");
+                toast.error("Session expired. Please log in again.");
                 window.location.href = "/login";
 
                 return Promise.reject(refreshError);
             }
+        }
+
+        // Show error toast for all non-401 errors (and 401 on login/refresh)
+        if (err.response) {
+            toast.error(getErrorMessage(err));
+        } else {
+            // Network error / no response
+            toast.error("Network error. Please check your connection.");
         }
 
         return Promise.reject(err);
