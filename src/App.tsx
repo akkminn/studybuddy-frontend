@@ -1,10 +1,10 @@
+import {Toaster} from "@/components/ui/sonner.tsx";
+
 function App() {
 
   return (
     <>
-        <div className="container bg-gray-100">
-            <h1 className="">Hello World</h1>
-        </div>
+        <Toaster richColors position="top-right" />
     </>
   )
 }
