@@ -1,6 +1,6 @@
 // --- Enums ---
 
-export type UserRole = "admin" | "teacher" | "student";
+export type UserRole = "admin" | "student";
 export type DocumentStatus = "pending" | "processing" | "completed" | "failed";
 export type DocumentType = "pdf" | "text" | "md";
 

@@ -9,7 +9,7 @@ import type {
     DashboardResponse,
     SetRoleRequest,
     User,
-} from "../types/api";
+} from "../types/type.ts";
 import instance from "./instance";
 
 const AuthService = {

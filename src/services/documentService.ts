@@ -6,7 +6,7 @@ import type {
     BatchUploadResponse,
     HealthCheckResponse,
     UploadOptions,
-} from "../types/api";
+} from "../types/type.ts";
 
 const DocumentService = {
     upload: async (file: File, options: UploadOptions = {}): Promise<DocumentResponse> => {
