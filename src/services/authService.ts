@@ -13,17 +13,16 @@ import type {
 import instance from "./instance";
 
 const AuthService = {
-    register: async (payload: UserCreate): Promise<LoginResponse> => {
-        const {data} = await instance.post<LoginResponse>("/auth/register", payload);
-        // Persist tokens on successful registration
-        localStorage.setItem("access_token", data.tokens.access_token);
+    login: async (payload: UserLogin): Promise<LoginResponse> => {
+        const {data} = await instance.post<LoginResponse>("/auth/login", payload);
+        localStorage.setItem("access_token", data.tokens.id_token ?? data.tokens.access_token);
         localStorage.setItem("refresh_token", data.tokens.refresh_token);
         return data;
     },
 
-    login: async (payload: UserLogin): Promise<LoginResponse> => {
-        const {data} = await instance.post<LoginResponse>("/auth/login", payload);
-        localStorage.setItem("access_token", data.tokens.access_token);
+    register: async (payload: UserCreate): Promise<LoginResponse> => {
+        const {data} = await instance.post<LoginResponse>("/auth/register", payload);
+        localStorage.setItem("access_token", data.tokens.id_token ?? data.tokens.access_token);
         localStorage.setItem("refresh_token", data.tokens.refresh_token);
         return data;
     },

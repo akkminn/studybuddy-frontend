@@ -1,26 +1,20 @@
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Link, Navigate, useNavigate } from "react-router-dom"
-import type { AxiosError } from "axios"
+import { Eye, EyeOff } from "lucide-react"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import AuthService from "@/services/authService"
 import { loginSchema, type LoginSchema } from "@/schemas/authSchemas"
 
-function getApiError(error: unknown) {
-    const axiosError = error as AxiosError<{ detail?: string; message?: string }>
-    return axiosError.response?.data?.detail ?? axiosError.response?.data?.message ?? "Login failed"
-}
-
 export default function Login() {
     const navigate = useNavigate()
-    const [apiError, setApiError] = useState<string | null>(null)
+    const [showPassword, setShowPassword] = useState(false)
     const hasToken = Boolean(localStorage.getItem("access_token"))
 
     const form = useForm<LoginSchema>({
@@ -33,11 +27,10 @@ export default function Login() {
 
     const onSubmit = form.handleSubmit(async (values: LoginSchema) => {
         try {
-            setApiError(null)
             await AuthService.login(values)
             navigate("/dashboard", { replace: true })
         } catch (error) {
-            setApiError(getApiError(error))
+            console.error(error)
         }
     })
 
@@ -53,48 +46,81 @@ export default function Login() {
                     <CardDescription>Login to continue using StudyBuddy.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={onSubmit} className="space-y-4">
-                        {apiError && (
-                            <Alert variant="destructive">
-                                <AlertTitle>Unable to login</AlertTitle>
-                                <AlertDescription>{apiError}</AlertDescription>
-                            </Alert>
-                        )}
+                    <form id="form-login" onSubmit={onSubmit} className="space-y-2">
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
-                            {form.formState.errors.email && (
-                                <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
-                            )}
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                autoComplete="current-password"
-                                {...form.register("password")}
+                        <FieldGroup className="gap-4">
+                            <Controller
+                                name="email"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="form-login-email" isRequired>
+                                            Email
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="form-login-email"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="jhondoe@gmail.com"
+                                            autoComplete="email"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
+                                )}
                             />
-                            {form.formState.errors.password && (
-                                <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
-                            )}
-                        </div>
 
-                        <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
+                            <Controller
+                                name="password"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="form-login-password" isRequired>
+                                            Password
+                                        </FieldLabel>
+                                        <div className="relative">
+                                            <Input
+                                                {...field}
+                                                id="form-login-password"
+                                                aria-invalid={fieldState.invalid}
+                                                placeholder="Password"
+                                                autoComplete="current-password"
+                                                type={showPassword ? "text" : "password"}
+                                                className="pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    <Field orientation="vertical" className="flex justify-end gap-2">
+                        <Button className="w-full" form="form-login" type="submit" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? <Spinner className="h-4 w-4" /> : null}
                             {form.formState.isSubmitting ? "Logging in..." : "Login"}
                         </Button>
-
                         <p className="text-sm text-muted-foreground">
                             Don&apos;t have an account?{" "}
                             <Link className="font-medium text-primary hover:underline" to="/register">
                                 Register
                             </Link>
                         </p>
-                    </form>
-                </CardContent>
+                    </Field>
+                </CardFooter>
             </Card>
         </main>
     )

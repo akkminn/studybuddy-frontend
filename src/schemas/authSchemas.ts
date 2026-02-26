@@ -1,8 +1,12 @@
-import * as z from "zod";
+import * as z from "zod"
 
 export const registerSchema = z.object({
     display_name: z
-        .string()
+        .string({
+            error: (issue) => issue.input === undefined
+                ? "Display name is required"
+                : "Invalid input"
+        })
         .trim()
         .min(2, "Full name must be at least 2 characters")
         .max(80, "Full name must be at most 80 characters"),
@@ -23,7 +27,11 @@ export const registerSchema = z.object({
             "Password must contain at least one special character",
         ),
     confirm_password: z
-        .string()
+        .string({
+            error: (issue) => issue.input === undefined
+                ? "Confirm password is required"
+                : "Invalid input"
+        })
         .min(8, "Password must be at least 8 characters")
 }).refine((data) => data.password === data.confirm_password, {
     message: "Passwords do not match",

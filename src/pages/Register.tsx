@@ -1,10 +1,9 @@
-import {useState} from "react"
 import {Controller, useForm} from "react-hook-form"
 import {zodResolver} from "@hookform/resolvers/zod"
 import {Link, Navigate, useNavigate} from "react-router-dom"
-import type {AxiosError} from "axios"
+import {useState} from "react"
+import {Eye, EyeOff} from "lucide-react"
 
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
@@ -13,15 +12,11 @@ import {registerSchema, type RegisterSchema} from "@/schemas/authSchemas"
 import AuthService from "@/services/authService"
 import {Field, FieldError, FieldGroup, FieldLabel} from "@/components/ui/field"
 
-function getApiError(error: unknown) {
-    const axiosError = error as AxiosError<{ detail?: string; message?: string }>
-    return axiosError.response?.data?.detail ?? axiosError.response?.data?.message ?? "Registration failed"
-}
-
 export default function Register() {
     const navigate = useNavigate()
-    const [apiError, setApiError] = useState<string | null>(null)
     const hasToken = Boolean(localStorage.getItem("access_token"))
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const form = useForm<RegisterSchema>({
         resolver: zodResolver(registerSchema),
@@ -29,12 +24,12 @@ export default function Register() {
             display_name: "",
             email: "",
             password: "",
+            confirm_password: "",
         },
     })
 
     const onSubmit = form.handleSubmit(async (values: RegisterSchema) => {
         try {
-            setApiError(null)
             await AuthService.register({
                 email: values.email,
                 password: values.password,
@@ -42,7 +37,7 @@ export default function Register() {
             })
             navigate("/dashboard", {replace: true})
         } catch (error) {
-            setApiError(getApiError(error))
+            console.error(error)
         }
     })
 
@@ -58,21 +53,14 @@ export default function Register() {
                     <CardDescription>Register to start using StudyBuddy.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form id="register-form" onSubmit={onSubmit} className="space-y-3">
-                        {apiError && (
-                            <Alert variant="destructive">
-                                <AlertTitle>Unable to register</AlertTitle>
-                                <AlertDescription>{apiError}</AlertDescription>
-                            </Alert>
-                        )}
-
-                        <FieldGroup>
+                    <form id="form-register" onSubmit={onSubmit} className="space-y-2">
+                        <FieldGroup className="gap-4">
                             <Controller
                                 name="display_name"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="form-register-display_name">
+                                        <FieldLabel htmlFor="form-register-display_name" isRequired>
                                             Full Name
                                         </FieldLabel>
                                         <Input
@@ -93,7 +81,7 @@ export default function Register() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="form-register-email">
+                                        <FieldLabel htmlFor="form-register-email" isRequired>
                                             Email
                                         </FieldLabel>
                                         <Input
@@ -115,16 +103,28 @@ export default function Register() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="form-register-password">
+                                        <FieldLabel htmlFor="form-register-password" isRequired>
                                             Password
                                         </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="form-register-password"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Password"
-                                            autoComplete="new-password"
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                {...field}
+                                                id="form-register-password"
+                                                aria-invalid={fieldState.invalid}
+                                                placeholder="Password"
+                                                autoComplete="new-password"
+                                                type={showPassword ? "text" : "password"}
+                                                className="pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                            >
+                                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
                                         )}
@@ -137,16 +137,28 @@ export default function Register() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="form-register-confirm_password">
+                                        <FieldLabel htmlFor="form-register-confirm_password" isRequired>
                                             Confirm Password
                                         </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="form-register-confirm_password"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Retype Password"
-                                            autoComplete="false"
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                {...field}
+                                                id="form-register-confirm_password"
+                                                aria-invalid={fieldState.invalid}
+                                                placeholder="Retype Password"
+                                                autoComplete="false"
+                                                type={showConfirmPassword ? "text" : "password"}
+                                                className="pr-10"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                                                aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                            >
+                                                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                            </button>
+                                        </div>
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
                                         )}
@@ -155,28 +167,20 @@ export default function Register() {
                             />
 
                         </FieldGroup>
-
-                        <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    <Field orientation="vertical" className="flex justify-end gap-2">
+                        <Button className="w-full" form="form-register" type="submit" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? <Spinner className="h-4 w-4"/> : null}
                             {form.formState.isSubmitting ? "Creating account..." : "Register"}
                         </Button>
-
                         <p className="text-sm text-muted-foreground">
                             Already have an account?{" "}
                             <Link className="font-medium text-primary hover:underline" to="/login">
                                 Login
                             </Link>
                         </p>
-                    </form>
-                </CardContent>
-                <CardFooter>
-                    <Field orientation="horizontal">
-                        <Button type="button" variant="outline" onClick={() => form.reset()}>
-                            Reset
-                        </Button>
-                        <Button type="submit" form="form-rhf-input">
-                            Save
-                        </Button>
                     </Field>
                 </CardFooter>
             </Card>

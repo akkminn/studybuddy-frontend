@@ -1,7 +1,8 @@
 import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";
+import type {RefreshTokenResponse} from "@/types/type.ts";
 
-const API_BASE_URL = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_PREFIX;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_API_PREFIX;
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
@@ -113,16 +114,16 @@ instance.interceptors.response.use(
             }
 
             try {
-                const resp = await axios.post<{ access: string; refresh?: string }>(
-                    `${API_BASE_URL}/auth/refresh/`,
-                    { refresh }
+                const resp = await axios.post<RefreshTokenResponse>(
+                    `${API_BASE_URL}/auth/refresh`,
+                    { refresh_token: refresh }
                 );
 
-                const newAccess = resp.data.access;
+                const newAccess = resp.data.id_token;
 
                 localStorage.setItem("access_token", newAccess);
-                if (resp.data.refresh) {
-                    localStorage.setItem("refresh_token", resp.data.refresh);
+                if (resp.data.refresh_token) {
+                    localStorage.setItem("refresh_token", resp.data.refresh_token);
                 }
 
                 instance.defaults.headers.common.Authorization = "Bearer " + newAccess;
