@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import type { AxiosError } from "axios"
-import { useNavigate } from "react-router-dom"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Spinner } from "@/components/ui/spinner"
 import AuthService from "@/services/authService"
@@ -15,13 +13,11 @@ function getApiError(error: unknown) {
 }
 
 export default function Dashboard() {
-    const navigate = useNavigate()
     const [role, setRole] = useState<UserRole | null>(null)
     const [email, setEmail] = useState("")
     const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [isLoggingOut, setIsLoggingOut] = useState(false)
 
     useEffect(() => {
         const loadDashboard = async () => {
@@ -55,29 +51,11 @@ export default function Dashboard() {
         void loadDashboard()
     }, [])
 
-    const onLogout = async () => {
-        try {
-            setIsLoggingOut(true)
-            await AuthService.logout()
-        } catch {
-            localStorage.removeItem("access_token")
-            localStorage.removeItem("refresh_token")
-        } finally {
-            navigate("/login", { replace: true })
-        }
-    }
-
     return (
-        <main className="mx-auto min-h-screen w-full max-w-5xl p-6">
-            <div className="mb-6 flex items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-semibold">Dashboard</h1>
-                    <p className="text-sm text-muted-foreground">Signed in as {email || "-"}</p>
-                </div>
-                <Button variant="outline" onClick={onLogout} disabled={isLoggingOut}>
-                    {isLoggingOut ? <Spinner /> : null}
-                    {isLoggingOut ? "Logging out..." : "Logout"}
-                </Button>
+        <main className="mx-auto w-full max-w-5xl">
+            <div className="mb-6">
+                <h1 className="text-2xl font-semibold">Dashboard</h1>
+                <p className="text-sm text-muted-foreground">Signed in as {email || "-"}</p>
             </div>
 
             {isLoading ? (
