@@ -49,8 +49,8 @@ export default function Register() {
         <main className="flex min-h-screen items-center justify-center p-4">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Create account</CardTitle>
-                    <CardDescription>Register to start using StudyBuddy.</CardDescription>
+                    <CardTitle>Create your account</CardTitle>
+                    <CardDescription>Set up StudyBuddy in a minute.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form id="form-register" onSubmit={onSubmit} className="space-y-2">
@@ -61,13 +61,13 @@ export default function Register() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="form-register-display_name" isRequired>
-                                            Full Name
+                                            Full name
                                         </FieldLabel>
                                         <Input
                                             {...field}
                                             id="form-register-display_name"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="Jhon Doe"
+                                            placeholder="Jane Doe"
                                             autoComplete="name"
                                         />
                                         {fieldState.invalid && (
@@ -82,13 +82,13 @@ export default function Register() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="form-register-email" isRequired>
-                                            Email
+                                            Email address
                                         </FieldLabel>
                                         <Input
                                             {...field}
                                             id="form-register-email"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="jhondoe@gmail.com"
+                                            placeholder="name@school.edu"
                                             autoComplete="email"
                                         />
                                         {fieldState.invalid && (
@@ -111,8 +111,8 @@ export default function Register() {
                                                 {...field}
                                                 id="form-register-password"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="Password"
-                                                autoComplete="new-password"
+                                            placeholder="Create a password"
+                                            autoComplete="new-password"
                                                 type={showPassword ? "text" : "password"}
                                                 className="pr-10"
                                             />
@@ -138,15 +138,15 @@ export default function Register() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="form-register-confirm_password" isRequired>
-                                            Confirm Password
+                                            Confirm password
                                         </FieldLabel>
                                         <div className="relative">
                                             <Input
                                                 {...field}
                                                 id="form-register-confirm_password"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="Retype Password"
-                                                autoComplete="false"
+                                            placeholder="Re-enter your password"
+                                            autoComplete="false"
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 className="pr-10"
                                             />
@@ -173,12 +173,12 @@ export default function Register() {
                     <Field orientation="vertical" className="flex justify-end gap-2">
                         <Button className="w-full" form="form-register" type="submit" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? <Spinner className="h-4 w-4"/> : null}
-                            {form.formState.isSubmitting ? "Creating account..." : "Register"}
+                            {form.formState.isSubmitting ? "Creating account..." : "Create account"}
                         </Button>
                         <p className="text-sm text-muted-foreground">
                             Already have an account?{" "}
                             <Link className="font-medium text-primary hover:underline" to="/login">
-                                Login
+                                Sign in
                             </Link>
                         </p>
                     </Field>

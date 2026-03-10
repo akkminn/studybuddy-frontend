@@ -9,7 +9,7 @@ import type { DashboardResponse, UserRole } from "@/types/type.ts"
 
 function getApiError(error: unknown) {
     const axiosError = error as AxiosError<{ detail?: string; message?: string }>
-    return axiosError.response?.data?.detail ?? axiosError.response?.data?.message ?? "Request failed"
+    return axiosError.response?.data?.detail ?? axiosError.response?.data?.message ?? "Something went wrong"
 }
 
 export default function Dashboard() {
@@ -52,34 +52,34 @@ export default function Dashboard() {
     }, [])
 
     return (
-        <main className="mx-auto w-full max-w-5xl">
-            <div className="mb-6">
+        <main className="w-full space-y-6">
+            <header className="space-y-1">
                 <h1 className="text-2xl font-semibold">Dashboard</h1>
                 <p className="text-sm text-muted-foreground">Signed in as {email || "-"}</p>
-            </div>
+            </header>
 
             {isLoading ? (
                 <Card>
-                    <CardContent className="flex items-center gap-2 py-8">
+                    <CardContent className="flex items-center gap-2 py-6">
                         <Spinner className="h-5 w-5" />
-                        <p>Loading dashboard...</p>
+                        <p>Loading your dashboard...</p>
                     </CardContent>
                 </Card>
             ) : null}
 
             {error ? (
-                <Alert variant="destructive" className="mb-6">
-                    <AlertTitle>Could not load dashboard</AlertTitle>
+                <Alert variant="destructive">
+                    <AlertTitle>We couldn&apos;t load your dashboard</AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
                 </Alert>
             ) : null}
 
             {!isLoading && !error && dashboard ? (
-                <section className="grid gap-4 md:grid-cols-2">
+                <section className="space-y-4">
                     <Card>
                         <CardHeader>
-                            <CardTitle>User role</CardTitle>
-                            <CardDescription>Role-based dashboard detection</CardDescription>
+                            <CardTitle>Your role</CardTitle>
+                            <CardDescription>Used to personalize your experience</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p className="capitalize">{role}</p>
@@ -88,8 +88,8 @@ export default function Dashboard() {
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Backend message</CardTitle>
-                            <CardDescription>Response from your {role} endpoint</CardDescription>
+                            <CardTitle>System message</CardTitle>
+                            <CardDescription>From your {role} endpoint</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p>{dashboard.message}</p>

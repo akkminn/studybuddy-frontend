@@ -4,17 +4,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function MyQuizzes() {
     return (
-        <div className="mx-auto w-full max-w-5xl p-6">
+        <main className="w-full space-y-6">
+            <header className="space-y-1">
+                <h1 className="flex items-center gap-2 text-2xl font-semibold">
+                    <BookOpenCheck className="h-5 w-5 text-primary" />
+                    My Quizzes
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    View and manage your generated quizzes.
+                </p>
+            </header>
+
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <BookOpenCheck className="h-5 w-5 text-primary" />
-                        My Quizzes
-                    </CardTitle>
-                    <CardDescription>View and manage your generated quizzes.</CardDescription>
+                    <CardTitle>Coming soon</CardTitle>
+                    <CardDescription>
+                        Quiz management is on the way.
+                    </CardDescription>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">Quiz management features are coming soon.</CardContent>
+                <CardContent className="text-sm text-muted-foreground">
+                    We&apos;ll add filtering, progress tracking, and sharing options here.
+                </CardContent>
             </Card>
-        </div>
+        </main>
     )
 }

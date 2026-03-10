@@ -4,43 +4,43 @@ export const registerSchema = z.object({
     display_name: z
         .string({
             error: (issue) => issue.input === undefined
-                ? "Display name is required"
-                : "Invalid input"
+                ? "Full name is required"
+                : "Enter a valid name"
         })
         .trim()
         .min(2, "Full name must be at least 2 characters")
-        .max(80, "Full name must be at most 80 characters"),
-    email: z.email("Please enter a valid email address"),
+        .max(80, "Full name must be 80 characters or fewer"),
+    email: z.email("Enter a valid email address"),
     password: z
         .string()
-        .min(8, "Password must be at least 8 characters")
+        .min(8, "Use at least 8 characters")
         .refine(
             (value) => /[A-Z]/.test(value),
-            "Password must contain at least one uppercase letter",
+            "Include at least one uppercase letter",
         )
         .refine(
             (value) => /[a-z]/.test(value),
-            "Password must contain at least one lowercase letter",
+            "Include at least one lowercase letter",
         )
         .refine(
             (value) => /[^a-zA-Z0-9]/.test(value),
-            "Password must contain at least one special character",
+            "Include at least one special character",
         ),
     confirm_password: z
         .string({
             error: (issue) => issue.input === undefined
-                ? "Confirm password is required"
-                : "Invalid input"
+                ? "Please confirm your password"
+                : "Enter a valid password"
         })
-        .min(8, "Password must be at least 8 characters")
+        .min(8, "Use at least 8 characters")
 }).refine((data) => data.password === data.confirm_password, {
-    message: "Passwords do not match",
+    message: "Passwords don't match",
     path: ["confirm_password"],
 })
 
 export const loginSchema = z.object({
-    email: z.email("Please enter a valid email address"),
-    password: z.string().min(1, "Password is required"),
+    email: z.email("Enter a valid email address"),
+    password: z.string().min(1, "Enter your password"),
 })
 
 export type RegisterSchema = z.infer<typeof registerSchema>

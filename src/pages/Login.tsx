@@ -43,7 +43,7 @@ export default function Login() {
             <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle>Welcome back</CardTitle>
-                    <CardDescription>Login to continue using StudyBuddy.</CardDescription>
+                    <CardDescription>Sign in to continue with StudyBuddy.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form id="form-login" onSubmit={onSubmit} className="space-y-2">
@@ -55,13 +55,13 @@ export default function Login() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="form-login-email" isRequired>
-                                            Email
+                                            Email address
                                         </FieldLabel>
                                         <Input
                                             {...field}
                                             id="form-login-email"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="jhondoe@gmail.com"
+                                            placeholder="name@school.edu"
                                             autoComplete="email"
                                         />
                                         {fieldState.invalid && (
@@ -84,9 +84,9 @@ export default function Login() {
                                                 {...field}
                                                 id="form-login-password"
                                                 aria-invalid={fieldState.invalid}
-                                                placeholder="Password"
-                                                autoComplete="current-password"
-                                                type={showPassword ? "text" : "password"}
+                                            placeholder="Enter your password"
+                                            autoComplete="current-password"
+                                            type={showPassword ? "text" : "password"}
                                                 className="pr-10"
                                             />
                                             <button
@@ -111,12 +111,12 @@ export default function Login() {
                     <Field orientation="vertical" className="flex justify-end gap-2">
                         <Button className="w-full" form="form-login" type="submit" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? <Spinner className="h-4 w-4" /> : null}
-                            {form.formState.isSubmitting ? "Logging in..." : "Login"}
+                            {form.formState.isSubmitting ? "Signing in..." : "Sign in"}
                         </Button>
                         <p className="text-sm text-muted-foreground">
                             Don&apos;t have an account?{" "}
                             <Link className="font-medium text-primary hover:underline" to="/register">
-                                Register
+                                Create one
                             </Link>
                         </p>
                     </Field>

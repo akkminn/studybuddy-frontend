@@ -4,17 +4,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function Settings() {
     return (
-        <div className="mx-auto w-full max-w-5xl p-6">
+        <main className="w-full space-y-6">
+            <header className="space-y-1">
+                <h1 className="flex items-center gap-2 text-2xl font-semibold">
+                    <Settings2 className="h-5 w-5 text-primary" />
+                    Settings
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    Update your account and application preferences.
+                </p>
+            </header>
+
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Settings2 className="h-5 w-5 text-primary" />
-                        Settings
-                    </CardTitle>
-                    <CardDescription>Update your account and application preferences.</CardDescription>
+                    <CardTitle>Coming soon</CardTitle>
+                    <CardDescription>Settings are on the way.</CardDescription>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">Settings controls are coming soon.</CardContent>
+                <CardContent className="text-sm text-muted-foreground">
+                    We&apos;ll add profile, security, and notification controls here.
+                </CardContent>
             </Card>
-        </div>
+        </main>
     )
 }

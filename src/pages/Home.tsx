@@ -11,31 +11,35 @@ type FeatureCard = {
 
 const featureCards: FeatureCard[] = [
     {
-        title: "Create Mind Map",
-        description: "Turn your study materials into connected visual concepts for faster understanding.",
+        title: "Create mind maps",
+        description: "Turn study materials into connected visual concepts for faster recall.",
         icon: BrainCircuit,
     },
     {
-        title: "Create Flash Card",
-        description: "Generate smart flash cards from notes and revise effectively with spaced repetition.",
+        title: "Create flashcards",
+        description: "Generate flashcards from your notes and review with spaced repetition.",
         icon: Layers3,
     },
     {
-        title: "Generate Questions",
-        description: "Build quiz questions instantly with AI assistance tailored to your learning goals.",
+        title: "Generate quiz questions",
+        description: "Build questions instantly with AI tailored to your learning goals.",
         icon: FileQuestion,
     },
 ]
 
 export default function Home() {
     return (
-        <section className="mx-auto w-full max-w-6xl space-y-8">
-            <div className="rounded-2xl border bg-card/70 p-8 shadow-sm backdrop-blur-sm transition-all duration-300">
-                <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Welcome to StudyBuddy</h2>
-                <p className="mt-3 text-lg text-muted-foreground">AI-powered quiz generation platform</p>
-            </div>
+        <main className="w-full space-y-6">
+            <header className="space-y-2">
+                <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                    Welcome to StudyBuddy
+                </h1>
+                <p className="text-sm text-muted-foreground md:text-base">
+                    Turn notes into quizzes, flashcards, and maps in minutes.
+                </p>
+            </header>
 
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {featureCards.map((feature) => (
                     <Card key={feature.title} className="group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <CardHeader>
@@ -48,7 +52,7 @@ export default function Home() {
                         <CardContent />
                     </Card>
                 ))}
-            </div>
-        </section>
+            </section>
+        </main>
     )
 }
