@@ -1,4 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 type MessageRole = "user" | "assistant"
 
@@ -55,34 +57,46 @@ export default function ChatAgent() {
                         <CardTitle>Conversation</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {demoMessages.map((message) => (
-                            <div
-                                key={message.id}
-                                className={`max-w-[85%] rounded-lg px-4 py-3 text-sm ${
-                                    message.role === "user"
-                                        ? "ml-auto bg-primary text-primary-foreground"
-                                        : "bg-muted text-foreground"
-                                }`}
-                            >
-                                <p className="mb-1 text-xs font-medium uppercase tracking-wide opacity-80">
-                                    {message.role === "user" ? "You" : "StudyBuddy"}
-                                </p>
-                                <p>{message.content}</p>
-                            </div>
-                        ))}
+                        <div className="space-y-4">
+                            {demoMessages.map((message) => (
+                                <div
+                                    key={message.id}
+                                    className={`max-w-[85%] rounded-lg px-4 py-3 text-sm ${
+                                        message.role === "user"
+                                            ? "ml-auto bg-primary text-primary-foreground"
+                                            : "bg-muted text-foreground"
+                                    }`}
+                                >
+                                    <p className="mb-1 text-xs font-medium uppercase tracking-wide opacity-80">
+                                        {message.role === "user" ? "You" : "StudyBuddy"}
+                                    </p>
+                                    <p>{message.content}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="border-t pt-4">
+                            <form className="space-y-3">
+                                <div>
+                                    <Textarea
+                                        placeholder="Ask StudyBuddy anything about your topic..."
+                                        className="min-h-[96px] resize-none"
+                                    />
+                                    <p className="mt-2 text-xs text-muted-foreground">
+                                        Tip: Ask for a summary, then request a short quiz.
+                                    </p>
+                                </div>
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <p className="text-xs text-muted-foreground">
+                                        Press Enter to send • Shift+Enter for a new line
+                                    </p>
+                                    <Button type="submit">Send</Button>
+                                </div>
+                            </form>
+                        </div>
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Session tips</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2 text-sm text-muted-foreground">
-                        <p>Ask for a quick summary before you start answering questions.</p>
-                        <p>Request mnemonics for tough concepts.</p>
-                        <p>End each session with a short quiz.</p>
-                    </CardContent>
-                </Card>
             </section>
         </main>
     )

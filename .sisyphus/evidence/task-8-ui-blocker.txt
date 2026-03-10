@@ -1,0 +1,18 @@
+Playwright UI automation blocker during Task 8 verification.
+
+Primary error:
+Error: browserType.launchPersistentContext: Chromium distribution 'chrome' is not found at /opt/google/chrome/chrome
+Run "npx playwright install chrome"
+
+Attempts made:
+- MCP: browser_install -> timed out.
+- CLI: npx playwright install chrome -> failed (sudo/password required in this environment).
+- MCP: browser_navigate http://127.0.0.1:4173/documents -> same missing chrome error.
+
+Environment facts:
+- /opt/google/chrome does not exist.
+- google-chrome/chromium/chromium-browser are not available in PATH.
+
+Impact:
+- Could not execute interactive browser happy/failure upload flows in this environment.
+- Command-based verification (lint/build) completed and captured.

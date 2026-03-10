@@ -20,7 +20,7 @@ import { Spinner } from "@/components/ui/spinner";
 import DocumentService from "@/services/documentService";
 import type { DocumentMetadata, DocumentStatus } from "@/types/type";
 
-const allowedExtensions = [".pdf", ".txt", ".md"];
+const allowedExtensions = [".pdf", ".docx", ".pptx", ".txt", ".md"];
 
 const statusBadgeStyles: Record<DocumentStatus, string> = {
 	pending: "border-amber-500/40 bg-amber-500/10 text-amber-700",
@@ -47,7 +47,7 @@ export default function Documents() {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [validationError, setValidationError] = useState<string | null>(null);
 	const [statusMessage, setStatusMessage] = useState(
-		"Choose a PDF, TXT, or MD file to upload.",
+		"Choose a PDF, DOCX, PPTX, TXT, or MD file to upload.",
 	);
 	const [uploadError, setUploadError] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState(false);
@@ -69,8 +69,8 @@ export default function Documents() {
 		} catch {
 			setListError(
 				mode === "refresh"
-					? "We couldn't refresh your documents."
-					: "We couldn't load your documents right now.",
+					? "We couldn't refresh your knowledge base."
+					: "We couldn't load your knowledge base right now.",
 			);
 			return false;
 		} finally {
@@ -89,7 +89,7 @@ export default function Documents() {
 			setSelectedFile(null);
 			setValidationError(null);
 			setUploadError(null);
-			setStatusMessage("Choose a PDF, TXT, or MD file to upload.");
+			setStatusMessage("Choose a PDF, DOCX, PPTX, TXT, or MD file to upload.");
 			return;
 		}
 
@@ -97,7 +97,7 @@ export default function Documents() {
 			event.target.value = "";
 			setSelectedFile(null);
 			setValidationError(
-				"That file type isn't supported. Choose a PDF, TXT, or MD file.",
+				"That file type isn't supported. Choose a PDF, DOCX, PPTX, TXT, or MD file.",
 			);
 			setUploadError(null);
 			setStatusMessage("That file type isn't supported.");
@@ -156,19 +156,19 @@ export default function Documents() {
 			<header className="space-y-1">
 				<h1 className="flex items-center gap-2 text-2xl font-semibold">
 					<FileText className="h-5 w-5 text-primary" />
-					Documents
+					Knowledge Base
 				</h1>
 				<p className="text-sm text-muted-foreground">
-					Upload and manage your study documents.
+					Upload materials to improve StudyBuddy&apos;s answers.
 				</p>
 			</header>
 
 			<section className="space-y-6">
 				<Card>
 					<CardHeader>
-						<CardTitle>Upload a document</CardTitle>
+						<CardTitle>Upload materials</CardTitle>
 						<CardDescription>
-							Add study materials to build your quiz library.
+							Add files to expand your knowledge base.
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -177,12 +177,12 @@ export default function Documents() {
 								<h2 className="text-sm font-medium">Choose a file</h2>
 								<Input
 									type="file"
-									accept=".pdf,.txt,.md"
+									accept=".pdf,.docx,.pptx,.txt,.md"
 									onChange={handleFileChange}
 									data-testid="documents-file-input"
 								/>
 								<p className="text-xs text-muted-foreground">
-									Accepted formats: PDF, TXT, MD
+									Accepted formats: PDF, DOCX, PPTX, TXT, MD
 								</p>
 							</section>
 
@@ -201,6 +201,17 @@ export default function Documents() {
 								</Button>
 							</section>
 
+							{isUploading ? (
+								<section className="space-y-2">
+									<div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+										<div className="h-full w-1/2 animate-pulse rounded-full bg-primary/70" />
+									</div>
+									<p className="text-xs text-muted-foreground">
+										Uploading... keep this tab open.
+									</p>
+								</section>
+							) : null}
+
 							<section>
 								<output
 									className={`text-sm ${validationError || uploadError ? "text-destructive" : "text-muted-foreground"}`}
@@ -216,7 +227,7 @@ export default function Documents() {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Your documents</CardTitle>
+						<CardTitle>Knowledge base files</CardTitle>
 						<CardDescription>
 							Track processing status and recent uploads.
 						</CardDescription>
@@ -228,7 +239,7 @@ export default function Documents() {
 						>
 							{isListLoading ? (
 								<p className="text-sm text-muted-foreground">
-									Loading your documents...
+									Loading your files...
 								</p>
 							) : listError ? (
 								<div className="space-y-2">
@@ -246,7 +257,7 @@ export default function Documents() {
 								</div>
 							) : documents.length === 0 ? (
 								<p className="text-sm text-muted-foreground">
-									No documents yet. Upload one to get started.
+									No files yet. Upload materials to get started.
 								</p>
 							) : (
 								<ul className="space-y-2">

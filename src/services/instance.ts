@@ -2,7 +2,10 @@ import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 
 import { toast } from "sonner";
 import type {RefreshTokenResponse} from "@/types/type.ts";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_API_PREFIX;
+const API_PREFIX = import.meta.env.VITE_API_PREFIX || "/api";
+const API_BASE_URL = import.meta.env.DEV
+    ? API_PREFIX
+    : import.meta.env.VITE_API_BASE_URL + API_PREFIX;
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
@@ -38,7 +41,13 @@ interface QueueEntry {
 let failedQueue: QueueEntry[] = [];
 
 const processQueue = (error: unknown, token: string | null = null): void => {
-    failedQueue.forEach(prom => (error ? prom.reject(error) : prom.resolve(token!)));
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token!);
+        }
+    });
     failedQueue = [];
 };
 

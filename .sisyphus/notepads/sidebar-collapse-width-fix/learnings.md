@@ -1,0 +1,1 @@
+- Removing the custom className "border-r border-sidebar-border/70" from AppSidebar lets Sidebar built-in width/border rules control collapsed icon width, which removes right-edge overflow without changing expanded sizing.
