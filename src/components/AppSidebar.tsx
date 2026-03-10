@@ -5,7 +5,7 @@ import {
     SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
     SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail,
 } from "@/components/ui/sidebar"
-import { FileQuestion, LayoutDashboard, Library, LibraryBig, LogOut, MessageSquareText, Settings, Sparkles } from "lucide-react"
+import { FileQuestion, Layers3, LayoutDashboard, Library, LibraryBig, LogOut, MessageSquareText, Settings, Sparkles } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useMemo } from "react";
 import AuthService from "@/services/authService";
@@ -13,6 +13,7 @@ import AuthService from "@/services/authService";
 const navItems = [
     { title: "Overview", icon: LayoutDashboard, href: "/dashboard" },
     { title: "Questions", icon: FileQuestion, href: "/generate-questions" },
+    { title: "Flashcards", icon: Layers3, href: "/flashcards" },
     { title: "Knowledge Base", icon: Library, href: "/knowledge-base" },
     { title: "Chat", icon: MessageSquareText, href: "/chat" },
     { title: "Quiz Library", icon: LibraryBig, href: "/my-quizzes" },

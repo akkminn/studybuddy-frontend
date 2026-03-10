@@ -12,6 +12,7 @@ import Documents from "@/pages/Documents.tsx";
 import MyQuizzes from "./pages/MyQuizzes";
 import Settings from "./pages/Settings";
 import {Toaster} from "@/components/ui/sonner.tsx";
+import FlashcardPage from "@/pages/Flashcard.tsx";
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/dashboard" element={<Dashboard/>}/>
                         <Route path="/generate-questions" element={<GenerateQuestion/>}/>
+                        <Route path="/flashcards" element={<FlashcardPage/>}/>
                         <Route path="/knowledge-base" element={<Documents/>}/>
                         <Route path="/chat" element={<ChatAgent/>}/>
                         <Route path="/my-quizzes" element={<MyQuizzes/>}/>

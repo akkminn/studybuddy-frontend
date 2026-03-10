@@ -144,3 +144,33 @@ export interface HealthCheckResponse {
     redis_connected: boolean;
     embedding_model_loaded: boolean;
 }
+
+export interface FlashcardCitation {
+    chunk_id: string;
+    doc_id?: string | null;
+    quote?: string | null;
+}
+
+export interface Flashcard {
+    card_id: string;
+    user_id: string;
+    concept_ids: string[];
+    question: string;
+    answer: string;
+    explanation: string;
+    concept_tags: string[];
+    citations: FlashcardCitation[];
+    created_at: string;
+}
+
+export interface FlashcardGenerateRequest {
+    user_id: string;
+    topic?: string;
+    goal?: string;
+    genre: string;
+    mode?: string;
+}
+
+export interface FlashcardGenerateResponse {
+    cards: Flashcard[];
+}
