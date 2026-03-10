@@ -1,1 +1,0 @@
-- bun is not installed in this environment (bun: command not found), so verification used npm run build as a functional fallback.
