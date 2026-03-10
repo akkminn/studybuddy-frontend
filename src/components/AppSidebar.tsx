@@ -35,7 +35,7 @@ export function AppSidebar() {
     }
 
     return (
-        <Sidebar collapsible="icon" className="border-r border-sidebar-border/70">
+        <Sidebar collapsible="icon">
             <SidebarHeader className="p-3">
                 <Link to="/" className="flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-sidebar-accent">
                     <div className="flex size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
