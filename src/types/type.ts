@@ -174,3 +174,47 @@ export interface FlashcardGenerateRequest {
 export interface FlashcardGenerateResponse {
     cards: Flashcard[];
 }
+
+export interface ChatSource {
+    subject: string;
+    topic_path: string[];
+    content: string;
+}
+
+export interface ChatSessionCreateRequest {
+    title?: string | null;
+    message?: string | null;
+}
+
+export interface ChatSessionResponse {
+    id: string;
+    user_id: string;
+    title: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface ChatSessionListResponse {
+    sessions: ChatSessionResponse[];
+    next_cursor?: string | null;
+    total: number;
+}
+
+export interface ChatMessageCreateRequest {
+    content: string;
+}
+
+export interface ChatMessageResponse {
+    id: string;
+    session_id: string;
+    role: "user" | "assistant" | "system";
+    content: string;
+    sources?: ChatSource[] | null;
+    created_at: string;
+}
+
+export interface ChatMessageListResponse {
+    messages: ChatMessageResponse[];
+    next_cursor?: string | null;
+    total: number;
+}
