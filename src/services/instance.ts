@@ -2,10 +2,14 @@ import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 
 import { toast } from "sonner";
 import type {RefreshTokenResponse} from "@/types/type.ts";
 
-const API_PREFIX = import.meta.env.VITE_API_PREFIX || "/api";
+const API_PREFIX = (import.meta.env.VITE_API_PREFIX || "/api").trim();
+const NORMALIZED_API_PREFIX = API_PREFIX.startsWith("/") ? API_PREFIX : `/${API_PREFIX}`;
+const RAW_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").trim().replace(/\/+$/, "");
 const API_BASE_URL = import.meta.env.DEV
-    ? API_PREFIX
-    : import.meta.env.VITE_API_BASE_URL + API_PREFIX;
+    ? NORMALIZED_API_PREFIX
+    : RAW_API_BASE_URL
+        ? `${RAW_API_BASE_URL}${NORMALIZED_API_PREFIX}`
+        : NORMALIZED_API_PREFIX;
 
 const instance = axios.create({
     baseURL: API_BASE_URL,

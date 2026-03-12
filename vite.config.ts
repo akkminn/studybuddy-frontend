@@ -7,6 +7,14 @@ import { defineConfig, loadEnv } from "vite";
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), "");
 	const apiPrefix = env.VITE_API_PREFIX || "/api";
+	const apiBaseUrl = env.VITE_API_BASE_URL || "http://localhost:8000";
+
+	let proxyTarget = "http://localhost:8000";
+	try {
+		proxyTarget = new URL(apiBaseUrl).origin;
+	} catch {
+		proxyTarget = "http://localhost:8000";
+	}
 
 	return {
 		plugins: [react(), tailwindcss()],
@@ -19,7 +27,7 @@ export default defineConfig(({ mode }) => {
 			open: "/login",
 			proxy: {
 				[apiPrefix]: {
-					target: "http://localhost:8000",
+					target: proxyTarget,
 					changeOrigin: true,
 				},
 			},
